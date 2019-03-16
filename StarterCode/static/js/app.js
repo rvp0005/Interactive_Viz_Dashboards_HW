@@ -1,3 +1,4 @@
+// HW15_env
 // ===========METADATA===========
 function buildMetadata(sample) {
   // var defaultURL = "/metadata/<sample>"
@@ -22,39 +23,30 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
   var defaultURL = `/samples/${sample}`;
 
-  otu_ids = []
-  otu_labels = []
-  sample_values = []
-
 // =========== Makes arrays from JSON ===========
   d3.json(defaultURL).then(function(response) {
     // console.log(response);
-    otu_ids.push(response.otu_ids);
-    otu_labels.push(response.otu_labels);
-    sample_values.push(response.sample_values);
+  var sample_values = response.sample_values;
+  var otu_ids = response.otu_ids;
+  var otu_labels = response.otu_labels;
 
-    const sizes = sample_values[0].map(value => {
+    const sizes = sample_values.map(value => {
       return value
     });
-
-    // console.log(sample_values);
-    var labels = otu_labels[0];
 
 // ===========Makes scatter plot ===========
     var trace = {
       type: "scatter",
       mode: "markers",
       marker: {
-        color : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80],
+        color : otu_ids,
         colorscale: 'Jet',
-        cmin: 0,
-        cmax: 163,
         size: sizes,
       },
-      text: labels,
+      text: otu_labels,
       name: "Belly Button Biodiversity",
-      x: otu_ids[0],
-      y: sample_values[0],
+      x: otu_ids,
+      y: sample_values,
     };
 
     var data = [trace];
@@ -62,7 +54,7 @@ function buildCharts(sample) {
     var layout = {
       title: "Belly Button Biodiversity",
       height: 600,
-      width: 1500,
+      width: 1400,
     xaxis: {
     title: {
       text: 'OTU IDs',
@@ -126,6 +118,70 @@ var p_layout = {
     };
 
 Plotly.newPlot("pie", p_trace, p_layout)
+
+// // ======= Washing Freq Gauge ========
+
+// // Enter a speed between 0 and 180
+// var level = 175;
+
+// // Trig to calc meter point
+// var degrees = 180 - level,
+//      radius = .5;
+// var radians = degrees * Math.PI / 180;
+// var x = radius * Math.cos(radians);
+// var y = radius * Math.sin(radians);
+
+// // Path: may have to change to create a better triangle
+// var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+//      pathX = String(x),
+//      space = ' ',
+//      pathY = String(y),
+//      pathEnd = ' Z';
+// var path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+// var data = [{ type: 'scatter',
+//    x: [0], y:[0],
+//     marker: {size: 28, color:'850000'},
+//     showlegend: false,
+//     name: 'speed',
+//     text: level,
+//     hoverinfo: 'text+name'},
+//   { values: [50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50/9, 50],
+//   rotation: 90,
+//   text: ['8-9', '7-8', '6-7', '5-6',
+//             '4-5', '3-4', '2-3', '1-2', '0-1', ''],
+//   textinfo: 'text',
+//   textposition:'inside',
+//   marker: {colors:['rgba(14, 127, 0, .5)', 'rgba(110, 154, 22, .5)',
+//                          'rgba(170, 202, 42, .5)', 'rgba(202, 209, 95, .5)',
+//                          'rgba(210, 206, 145, .5)', 'rgba(232, 226, 202, .5)',
+//                          'rgba(255, 255, 255, 0)']},
+//   labels: ['151-180', '121-150', '91-120', '61-90', '31-60', '0-30', ''],
+//   hoverinfo: 'label',
+//   hole: .5,
+//   type: 'pie',
+//   showlegend: false
+// }];
+
+// var layout = {
+//   shapes:[{
+//       type: 'path',
+//       path: path,
+//       fillcolor: '850000',
+//       line: {
+//         color: '850000'
+//       }
+//     }],
+//   title: 'Washing Frequency',
+//   height: 400,
+//   width: 400,
+//   xaxis: {zeroline:false, showticklabels:false,
+//              showgrid: false, range: [-1, 1]},
+//   yaxis: {zeroline:false, showticklabels:false,
+//              showgrid: false, range: [-1, 1]}
+// };
+
+// Plotly.newPlot('gauge', data, layout);
 
   });
 };
