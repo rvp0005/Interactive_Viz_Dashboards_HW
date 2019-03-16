@@ -79,62 +79,54 @@ function buildCharts(sample) {
           size: 18,
           color: '#7f7f7f'
       }
-    }
-  }
-    };
+     }
+   }
+ };
 
     // console.log(trace.x);
-    Plotly.newPlot("bubble", data, layout);
+Plotly.newPlot("bubble", data, layout);
 
-// ===========Makes Pie Chart ===========
-    var labels= otu_labels[0].slice(0,10);
-    // console.log(labels);
-    var values = sample_values[0].slice(0,10);
-    // console.log(values);
-    var ID = otu_ids[0].slice(0,10);
-    // console.log(ID);
+// ======= Trying to sort and slice =======
+var array = []
+var sample_vals = response.sample_values;
+var sample_id = response.otu_ids;
+var sample_label = response.otu_labels;
 
-    var trace1 = [{
-      values: values,
-      labels: ID,
-      type: 'pie',
-      name: 'Data Subset',
-      text: labels,
-      textinfo: 'percent',
-      hoverinfo:("text"+"labels"+"percent"),
-    }];
+   for (var j = 0; j < sample_id.length; j++) {
+     array.push({'sample_values': sample_vals[j], 'otu_id': sample_id[j], 'otu_label': sample_label[j]}
+   )};
+  //  console.log(array)
+   var sorted = array.sort(function(a, b) {
+   // var sorted = data.sort(function(a, b) {
+     return parseFloat(b.sample_values) - parseFloat(a.sample_values);
+   });
+   sorted.sort();
+   // Slice the first 10 objects for plotting
+   sorted = sorted.slice(0, 10);
+   // Reverse the array due to Plotly's defaults
+   sorted = sorted.reverse();
+   console.log(sorted);
 
-    var layout1 = {
+
+// ===========Makes Pie Chart SORTED ===========
+
+var p_trace = [{
+    type: "pie",
+    values: sorted.map(row => row.sample_values),
+    labels: sorted.map(row => row.otu_id),
+    hoverinfo: sorted.map(row => row.otu_label),
+    name: "Data Subset"
+   }];
+var p_layout = {
     height: 600,
     width: 600,
     title: "10 Most Found Bacteria"
     };
 
-    Plotly.newPlot("pie", trace1, layout1)
-
-// ======= Trying to sort and slice =======
-
-
+Plotly.newPlot("pie", p_trace, p_layout)
 
   });
 };
-
-
-    // pie_values.sort(function(a, b) {
-    //   return ((a.sample_values[0] < b.sample_values[0]) ? -1 : 
-    //   ((a.sample_values[0] == b.sample_values[0]) ? 0 : 1));
-    // });
-    // console.log(sample_values[0])
-
-    // for (var k = 0; k < pie_values.length; k++) {
-    //   otu_ids[k] = pie_values[k].otu_ids;
-    //   otu_labels[k] = pie_values[k].otu_labels;
-    //   sample_values[k]= pie_values[k].sample_values;
-
-    // console.log(sample_values)
-
-
-
 
 function init() {
   // Grab a reference to the dropdown select element
