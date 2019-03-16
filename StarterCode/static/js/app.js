@@ -93,7 +93,7 @@ var sample_id = response.otu_ids;
 var sample_label = response.otu_labels;
 
    for (var j = 0; j < sample_id.length; j++) {
-     array.push({'sample_values': sample_vals[j], 'otu_id': sample_id[j], 'otu_label': sample_label[j]}
+     array.push({'sample_values': sample_vals[j], 'otu_ids': sample_id[j], 'otu_labels': sample_label[j]}
    )};
   //  console.log(array)
    var sorted = array.sort(function(a, b) {
@@ -111,16 +111,18 @@ var sample_label = response.otu_labels;
 // ===========Makes Pie Chart SORTED ===========
 
 var p_trace = [{
-    type: "pie",
-    values: sorted.map(row => row.sample_values),
-    labels: sorted.map(row => row.otu_id),
-    hoverinfo: sorted.map(row => row.otu_label),
-    name: "Data Subset"
+     values: sorted.map(row => row.sample_values),
+     labels: sorted.map(row => row.otu_ids),
+     hovertext: sorted.map(row => row.otu_labels),
+     type: "pie",
+     name: "Data Subset"
    }];
+
 var p_layout = {
     height: 600,
     width: 600,
-    title: "10 Most Found Bacteria"
+    title: "10 Most Found Bacteria",
+    colorway: 'Jet',
     };
 
 Plotly.newPlot("pie", p_trace, p_layout)
